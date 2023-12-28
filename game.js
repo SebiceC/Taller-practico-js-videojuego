@@ -15,8 +15,13 @@ function startGame() {
     game.textAlign = 'end'
 
     for ( let i = 1; i <= 10; i++){
-        game.fillText(emojis['X'], elementsSize, elementsSize * i);
+        for (let j = 1; j <= 10; j++){
+            game.fillText(emojis['X'], elementsSize * i + 11, elementsSize * j - 8);
+        }
     }
+    // for (let i = 1; i <= 10; i++) {
+    //     game.fillText(emojis['X'], elementsSize * i, elementsSize);
+    // }
     
     // window.innerHeight
     // window.innerWidth
