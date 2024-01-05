@@ -7,6 +7,7 @@ const btnDown = document.querySelector('#down');
 
 let canvaSize;
 let elementsSize;
+let level = 0;
 
 const playerPosition = {
     x: undefined,
@@ -18,6 +19,8 @@ const giftPosition = {
     y: undefined,
 };
 
+let wallPosition = [];
+
 window.addEventListener('load', setCavaSize);
 window.addEventListener('resize', setCavaSize);
 
@@ -28,11 +31,18 @@ function startGame() {
     game.font = elementsSize + 'px Verdana';
     game.textAlign = 'end'
 
-    const map = maps[0];
+    const map = maps[level];
+    
+    if (!map) {
+        gameWin();
+        return;
+    }
+    
     const mapRows = map.trim().split('\n');
     const mapRowCols = mapRows.map(row => row.trim().split(''));
     console.log({map, mapRows, mapRowCols});
 
+    wallPosition = [];
     game.clearRect(0,0,canvaSize, canvaSize);
 
     mapRowCols.forEach((row, rowI) => {
@@ -51,6 +61,11 @@ function startGame() {
             } else if (col == 'I') {
                 giftPosition.x = positionX;
                 giftPosition.y = positionY;
+            } else if (col == 'X') {
+                wallPosition.push({
+                    x: positionX,
+                    y: positionY,
+                });
             }
 
         game.fillText(emoji, positionX, positionY);
@@ -67,13 +82,31 @@ function movePlayer () {
     const giftColision = giftColisionX && giftColisionY;
 
     if(giftColision) {
-        console.log('Subiste de nivel, wiii!');
+        levelWin();
     }
 
+    const wallColision = wallPosition.find(wall => {
+        const wallColisionX = wall.x.toFixed(3) == playerPosition.x.toFixed(3);
+        const wallColisionY = wall.y.toFixed(3) == playerPosition.y.toFixed(3);
+        return wallColisionX && wallColisionY;
+    });
 
+    if(wallColision) {
+        console.log('chocaste contra un enemigo');
+    }
+    
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
+function levelWin() {
+    console.log('subiste de nivel');
+    level++;
+    startGame();
+}
+
+function gameWin() {
+    console.log('terminaste el juego!');
+}
 function setCavaSize() {
 
     if (window.innerHeight > window.innerWidth) {
