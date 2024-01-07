@@ -5,12 +5,18 @@ const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 const spanLives = document.querySelector('#lives');
+const spanTime = document.querySelector('#time');
 
 
 let canvaSize;
 let elementsSize;
 let level = 0;
 let lives = 3;
+
+let timeStart;
+let timePlayer;
+let timeInterval;
+
 
 const playerPosition = {
     x: undefined,
@@ -41,6 +47,10 @@ function startGame() {
         return;
     }
     
+    if (!timeStart) {
+        timeStart = Date.now();
+        timeInterval = setInterval(showTime, 100);
+    }
     const mapRows = map.trim().split('\n');
     const mapRowCols = mapRows.map(row => row.trim().split(''));
     console.log({map, mapRows, mapRowCols});
@@ -118,6 +128,7 @@ function levelFail() {
     if (lives <= 0) {
         level = 0;
         lives = 3;
+        timeStart = undefined;
     }
 
     playerPosition.x = undefined;
@@ -127,6 +138,7 @@ function levelFail() {
 
 function gameWin() {
     console.log('terminaste el juego!');
+    clearInterval(timeInterval);
 }
 
 function showLives() {
@@ -136,6 +148,10 @@ function showLives() {
 
     spanLives.innerHTML = "";
     heartsArray.forEach(heart => spanLives.append(heart));
+}
+
+function showTime() {
+    spanTime.innerHTML = Date.now() - timeStart;
 }
 
 function setCavaSize() {
