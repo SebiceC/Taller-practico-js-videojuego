@@ -13,7 +13,7 @@ const emojis = {
 const maps = [];
 
 maps.push(`
-  IXXXXXXXXXhttps://www.autodraw.com/
+  IXXXXXXXXX
   -XXXXXXXXX
   -XXXXXXXXX
   -XXXXXXXXX

@@ -6,6 +6,8 @@ const btnRight = document.querySelector('#right');
 const btnDown = document.querySelector('#down');
 const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
 
 
 let canvaSize;
@@ -33,6 +35,30 @@ let wallPosition = [];
 window.addEventListener('load', setCavaSize);
 window.addEventListener('resize', setCavaSize);
 
+function fixNumber(n){
+    return Number(n.toFixed(2));
+}
+
+function setCavaSize() {
+
+    if (window.innerHeight > window.innerWidth) {
+        canvaSize = window.innerWidth * 0.7;
+    } else {
+        canvaSize = window.innerHeight * 0.7;
+    }
+
+    canvaSize = Number(canvaSize.toFixed(0));
+    canvas.setAttribute('width', canvaSize);
+    canvas.setAttribute('height', canvaSize);
+
+    elementsSize = canvaSize / 10;
+
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+
+    startGame();
+}
+
 function startGame() {
 
     console.log({ canvaSize, elementsSize });
@@ -50,6 +76,7 @@ function startGame() {
     if (!timeStart) {
         timeStart = Date.now();
         timeInterval = setInterval(showTime, 100);
+        showRecord();
     }
     const mapRows = map.trim().split('\n');
     const mapRowCols = mapRows.map(row => row.trim().split(''));
@@ -71,7 +98,6 @@ function startGame() {
                 if(!playerPosition.x && !playerPosition.y) {
                     playerPosition.x = positionX;
                     playerPosition.y = positionY;
-                    console.log({playerPosition});
                 }
             } else if (col == 'I') {
                 giftPosition.x = positionX;
@@ -92,8 +118,8 @@ function startGame() {
 }
 
 function movePlayer () {
-    const giftColisionX = playerPosition.x.toFixed(5) == giftPosition.x.toFixed(5);
-    const giftColisionY = playerPosition.y.toFixed(5) == giftPosition.y.toFixed(5);
+    const giftColisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
+    const giftColisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
     const giftColision = giftColisionX && giftColisionY;
 
     if(giftColision) {
@@ -139,6 +165,24 @@ function levelFail() {
 function gameWin() {
     console.log('terminaste el juego!');
     clearInterval(timeInterval);
+
+
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = Date.now() - timeStart;
+
+    if (recordTime) {
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime);
+            pResult.innerHTML = 'superaste el record!';
+        } else {
+            pResult.innerHTML = 'no superaste el record';
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime);
+        pResult.innerHTML = 'Es tu primera vez? ¡este es tu record!';
+    }
+
+    console.log({recordTime, playerTime});
 }
 
 function showLives() {
@@ -154,21 +198,26 @@ function showTime() {
     spanTime.innerHTML = Date.now() - timeStart;
 }
 
-function setCavaSize() {
-
-    if (window.innerHeight > window.innerWidth) {
-        canvaSize = window.innerWidth * 0.8;
-    } else {
-        canvaSize = window.innerHeight * 0.8;
-    }
-
-    canvas.setAttribute('width', canvaSize)
-    canvas.setAttribute('height', canvaSize)
-
-    elementsSize = canvaSize / 10;
-
-    startGame();
+function showRecord() {
+    spanRecord.innerHTML = localStorage.getItem('record_time');
 }
+
+// function setCavaSize() {
+
+//     if (window.innerHeight > window.innerWidth) {
+//         canvaSize = window.innerWidth * 0.7;
+//     } else {
+//         canvaSize = window.innerHeight * 0.7;
+//     }
+
+//     canvaSize = Number(canvaSize.toFixed(0));
+//     canvas.setAttribute('width', canvaSize);
+//     canvas.setAttribute('height', canvaSize);
+
+//     elementsSize = canvaSize / 10;
+
+//     startGame();
+// }
 game.font = '25px Verdana';
 game.fillStyle = 'purple';
 game.textAlign = 'center';
