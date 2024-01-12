@@ -46,6 +46,19 @@ function setCavaSize() {
     } else {
         canvaSize = window.innerHeight * 0.7;
     }
+    // if (window.innerHeight > window.innerWidth) {
+    //     if ((window, innerWidth < 450)) {
+    //       canvaSize = 350;
+    //     } else {
+    //       canvaSize = (window.innerWidth * 0.75).toFixed(0);
+    //     }
+    //   } else {
+    //     if (window.innerHeight < 450) {
+    //       canvaSize = 350;
+    //     } else {
+    //       canvaSize = (window.innerHeight * 0.75).toFixed(0);
+    //     }
+    //   }
 
     canvaSize = Number(canvaSize.toFixed(0));
     canvas.setAttribute('width', canvaSize);
@@ -63,8 +76,8 @@ function startGame() {
 
     console.log({ canvaSize, elementsSize });
 
-    game.font = elementsSize + 'px Verdana';
-    game.textAlign = 'end'
+    game.font = elementsSize - 7  + 'px Verdana';
+    game.textAlign = 'end';
 
     const map = maps[level];
     
@@ -90,8 +103,8 @@ function startGame() {
     mapRowCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
             const emoji = emojis[col];
-            const positionX = elementsSize * (colI + 1);
-            const positionY = elementsSize * (rowI + 1);
+            const positionX = elementsSize * (colI + 1.12);
+            const positionY = elementsSize * (rowI + 0.82);
 
 
             if (col == 'O') {
@@ -118,8 +131,8 @@ function startGame() {
 }
 
 function movePlayer () {
-    const giftColisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
-    const giftColisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+    const giftColisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);
+    const giftColisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
     const giftColision = giftColisionX && giftColisionY;
 
     if(giftColision) {
@@ -127,8 +140,8 @@ function movePlayer () {
     }
 
     const wallColision = wallPosition.find(wall => {
-        const wallColisionX = wall.x.toFixed(3) == playerPosition.x.toFixed(3);
-        const wallColisionY = wall.y.toFixed(3) == playerPosition.y.toFixed(3);
+        const wallColisionX = wall.x.toFixed(0) == playerPosition.x.toFixed(0);
+        const wallColisionY = wall.y.toFixed(0) == playerPosition.y.toFixed(0);
         return wallColisionX && wallColisionY;
     });
 
@@ -202,26 +215,10 @@ function showRecord() {
     spanRecord.innerHTML = localStorage.getItem('record_time');
 }
 
-// function setCavaSize() {
-
-//     if (window.innerHeight > window.innerWidth) {
-//         canvaSize = window.innerWidth * 0.7;
-//     } else {
-//         canvaSize = window.innerHeight * 0.7;
-//     }
-
-//     canvaSize = Number(canvaSize.toFixed(0));
-//     canvas.setAttribute('width', canvaSize);
-//     canvas.setAttribute('height', canvaSize);
-
-//     elementsSize = canvaSize / 10;
-
-//     startGame();
-// }
 game.font = '25px Verdana';
 game.fillStyle = 'purple';
 game.textAlign = 'center';
-game.fillText('Platzi', 25, 25);
+// game.fillText('Platzi', 25, 25);
 
 
 window.addEventListener('keydown', moveByKeys);
