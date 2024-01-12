@@ -278,3 +278,6 @@ function moveDown() {
         startGame();
     }
 }
+
+// location.reload() para recargar la pagina
+// setTimeOut() para ejecutar codigo despues de un tiempo
