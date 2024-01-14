@@ -9,8 +9,7 @@ const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
 const pResult = document.querySelector('#result');
 
-
-let canvaSize;
+let canvasSize;
 let elementsSize;
 let level = 0;
 let lives = 3;
@@ -19,207 +18,202 @@ let timeStart;
 let timePlayer;
 let timeInterval;
 
+let ultima_x;
+let ultima_y;
+let canvasSize1;
 
 const playerPosition = {
-    x: undefined,
-    y: undefined,
+  x: undefined,
+  y: undefined,
 };
-
 const giftPosition = {
-    x: undefined,
-    y: undefined,
+  x: undefined,
+  y: undefined,
 };
+let enemyPositions = [];
 
-let wallPosition = [];
+window.addEventListener('load', setCanvasSize);
+window.addEventListener('resize', setCanvasSize);
 
-window.addEventListener('load', setCavaSize);
-window.addEventListener('resize', setCavaSize);
-
-function fixNumber(n){
-    return Number(n.toFixed(2));
+function fixNumber(n) {
+  return Number(n.toFixed(2));
 }
 
-function setCavaSize() {
-
-    if (window.innerHeight > window.innerWidth) {
-        canvaSize = window.innerWidth * 0.7;
-    } else {
-        canvaSize = window.innerHeight * 0.7;
+function setCanvasSize() {
+  if (window.innerHeight > window.innerWidth) {
+    canvasSize = window.innerWidth * 0.7;
+  } else {
+    canvasSize = window.innerHeight * 0.7;
+  }
+  
+  if(canvasSize == canvasSize1) {
+    playerPosition.x = ultima_x;
+    playerPosition.y = ultima_y;
     }
-    // if (window.innerHeight > window.innerWidth) {
-    //     if ((window, innerWidth < 450)) {
-    //       canvaSize = 350;
-    //     } else {
-    //       canvaSize = (window.innerWidth * 0.75).toFixed(0);
-    //     }
-    //   } else {
-    //     if (window.innerHeight < 450) {
-    //       canvaSize = 350;
-    //     } else {
-    //       canvaSize = (window.innerHeight * 0.75).toFixed(0);
-    //     }
-    //   }
+    else {
+        playerPosition.x = ultima_x*(canvasSize/canvasSize1);
+        playerPosition.y = ultima_y*(canvasSize/canvasSize1);
+    }
+  canvasSize = Number(canvasSize.toFixed(0));
+  
+  canvas.setAttribute('width', canvasSize);
+  canvas.setAttribute('height', canvasSize);
+  
+  elementsSize = canvasSize / 10;
 
-    canvaSize = Number(canvaSize.toFixed(0));
-    canvas.setAttribute('width', canvaSize);
-    canvas.setAttribute('height', canvaSize);
-
-    elementsSize = canvaSize / 10;
-
-    playerPosition.x = undefined;
-    playerPosition.y = undefined;
-
-    startGame();
+  playerPosition.x = ultima_x;
+  playerPosition.y = ultima_y;
+  startGame();
 }
 
 function startGame() {
+  console.log({ canvasSize, elementsSize });
+  // console.log(window.innerWidth, window.innerHeight);
 
-    console.log({ canvaSize, elementsSize });
+  game.font = elementsSize + 'px Verdana';
+  game.textAlign = 'end';
 
-    game.font = elementsSize - 7  + 'px Verdana';
-    game.textAlign = 'end';
+  const map = maps[level];
 
-    const map = maps[level];
-    
-    if (!map) {
-        gameWin();
-        return;
-    }
-    
-    if (!timeStart) {
-        timeStart = Date.now();
-        timeInterval = setInterval(showTime, 100);
-        showRecord();
-    }
-    const mapRows = map.trim().split('\n');
-    const mapRowCols = mapRows.map(row => row.trim().split(''));
-    console.log({map, mapRows, mapRowCols});
+  if (!map) {
+    gameWin();
+    return;
+  }
 
-    showLives();
+  if (!timeStart) {
+    timeStart = Date.now();
+    timeInterval = setInterval(showTime, 100);
+    showRecord();
+  }
+  
+  const mapRows = map.trim().split('\n');
+  const mapRowCols = mapRows.map(row => row.trim().split(''));
+  console.log({map, mapRows, mapRowCols});
 
-    wallPosition = [];
-    game.clearRect(0,0,canvaSize, canvaSize);
+  showLives();
+  
+  enemyPositions = [];
+  game.clearRect(0,0,canvasSize, canvasSize);
 
-    mapRowCols.forEach((row, rowI) => {
-        row.forEach((col, colI) => {
-            const emoji = emojis[col];
-            const positionX = elementsSize * (colI + 1.12);
-            const positionY = elementsSize * (rowI + 0.82);
+  mapRowCols.forEach((row, rowI) => {
+    row.forEach((col, colI) => {
+      const emoji = emojis[col];
+      const posX = elementsSize * (colI + 1);
+      const posY = elementsSize * (rowI + 1);
 
-
-            if (col == 'O') {
-                if(!playerPosition.x && !playerPosition.y) {
-                    playerPosition.x = positionX;
-                    playerPosition.y = positionY;
-                }
-            } else if (col == 'I') {
-                giftPosition.x = positionX;
-                giftPosition.y = positionY;
-            } else if (col == 'X') {
-                wallPosition.push({
-                    x: positionX,
-                    y: positionY,
-                });
-            }
-
-        game.fillText(emoji, positionX, positionY);
-
+      if (col == 'O') {
+        if (!playerPosition.x && !playerPosition.y) {
+          playerPosition.x = posX;
+          playerPosition.y = posY;
+          // console.log({playerPosition});
+        }
+      } else if (col == 'I') {
+        giftPosition.x = posX;
+        giftPosition.y = posY;
+      } else if (col == 'X') {
+        enemyPositions.push({
+          x: posX,
+          y: posY,
         });
+      }
+      
+      game.fillText(emoji, posX, posY);
     });
-    
-    movePlayer();
+  });
+
+  movePlayer();
 }
 
-function movePlayer () {
-    const giftColisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);
-    const giftColisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
-    const giftColision = giftColisionX && giftColisionY;
+function movePlayer() {
 
-    if(giftColision) {
-        levelWin();
+    ultima_x = playerPosition.x;
+    ultima_y = playerPosition.y;
+
+  const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
+  const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+  const giftCollision = giftCollisionX && giftCollisionY;
+  
+  if(window.innerHeight > window.innerWidth) {
+    canvasSize1 = window.innerWidth * 0.7;
+    }
+    else {
+        canvasSize1 = window.innerHeight * 0.7;
     }
 
-    const wallColision = wallPosition.find(wall => {
-        const wallColisionX = wall.x.toFixed(0) == playerPosition.x.toFixed(0);
-        const wallColisionY = wall.y.toFixed(0) == playerPosition.y.toFixed(0);
-        return wallColisionX && wallColisionY;
-    });
+  if (giftCollision) {
+    levelWin();
+  }
 
-    if(wallColision) {
-        levelFail();
-    }
-    
-    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+  const enemyCollision = enemyPositions.find(enemy => {
+    const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+    const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+    return enemyCollisionX && enemyCollisionY;
+  });
+  
+  if (enemyCollision) {
+    levelFail();
+  }
+
+  game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
 function levelWin() {
-    console.log('subiste de nivel');
-    level++;
-    startGame();
+  console.log('Subiste de nivel');
+  level++;
+  startGame();
 }
 
 function levelFail() {
-    console.log('fallaste');
-    lives--;
+  console.log('Chocaste contra un enemigo :(');
+  lives--;
+  
+  if (lives <= 0) {
+    level = 0;
+    lives = 3;
+    timeStart = undefined;
+  }
 
-    console.log(lives);
-
-    if (lives <= 0) {
-        level = 0;
-        lives = 3;
-        timeStart = undefined;
-    }
-
-    playerPosition.x = undefined;
-    playerPosition.y = undefined;
-    startGame();
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
+  startGame();
 }
 
 function gameWin() {
-    console.log('terminaste el juego!');
-    clearInterval(timeInterval);
+  console.log('Â¡Terminaste el juego!');
+  clearInterval(timeInterval);
 
+  const recordTime = localStorage.getItem('record_time');
+  const playerTime = Date.now() - timeStart;
 
-    const recordTime = localStorage.getItem('record_time');
-    const playerTime = Date.now() - timeStart;
-
-    if (recordTime) {
-        if (recordTime >= playerTime) {
-            localStorage.setItem('record_time', playerTime);
-            pResult.innerHTML = 'superaste el record!';
-        } else {
-            pResult.innerHTML = 'no superaste el record';
-        }
+  if (recordTime) {
+    if (recordTime >= playerTime) {
+      localStorage.setItem('record_time', playerTime);
+      pResult.innerHTML = 'SUPERASTE EL RECORD :)';
     } else {
-        localStorage.setItem('record_time', playerTime);
-        pResult.innerHTML = 'Es tu primera vez? ¡este es tu record!';
+      pResult.innerHTML = 'lo siento, no superaste el records :(';
     }
+  } else {
+    localStorage.setItem('record_time', playerTime);
+    pResult.innerHTML = 'Primera vez? Muy bien, pero ahora trata de superar tu tiempo :)';
+  }
 
-    console.log({recordTime, playerTime});
+  console.log({recordTime, playerTime});
 }
 
 function showLives() {
-    const heartsArray = Array(lives).fill(emojis['HEART'])
-    // console.log(heartsArray);
-    
-
-    spanLives.innerHTML = "";
-    heartsArray.forEach(heart => spanLives.append(heart));
+  const heartsArray = Array(lives).fill(emojis['HEART']); // [1,2,3]
+  
+  spanLives.innerHTML = "";
+  heartsArray.forEach(heart => spanLives.append(heart));
 }
 
 function showTime() {
-    spanTime.innerHTML = Date.now() - timeStart;
+  spanTime.innerHTML = Date.now() - timeStart;
 }
 
 function showRecord() {
-    spanRecord.innerHTML = localStorage.getItem('record_time');
+  spanRecord.innerHTML = localStorage.getItem('record_time');
 }
-
-game.font = '25px Verdana';
-game.fillStyle = 'purple';
-game.textAlign = 'center';
-// game.fillText('Platzi', 25, 25);
-
 
 window.addEventListener('keydown', moveByKeys);
 btnUp.addEventListener('click', moveUp);
@@ -228,53 +222,48 @@ btnRight.addEventListener('click', moveRight);
 btnDown.addEventListener('click', moveDown);
 
 function moveByKeys(event) {
-    if (event.key == 'ArrowUp') moveUp();
-    else if (event.key == 'ArrowLeft') moveLeft();
-    else if (event.key == 'ArrowRight') moveRight();
-    else if (event.key == 'ArrowDown') moveDown();
+  if (event.key == 'ArrowUp') moveUp();
+  else if (event.key == 'ArrowLeft') moveLeft();
+  else if (event.key == 'ArrowRight') moveRight();
+  else if (event.key == 'ArrowDown') moveDown();
 }
-
 function moveUp() {
-    console.log('Me quiero mover hacia arriba')
+  console.log('Me quiero mover hacia arriba');
 
-    if((playerPosition.y - elementsSize) < elementsSize) {
-        console.log('OUT');
-    } else {
-        playerPosition.y -= elementsSize;
-        startGame();
-    }
-    
+  if ((playerPosition.y - elementsSize) < elementsSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.y -= elementsSize;
+    startGame();
+  }
 }
 function moveLeft() {
-    console.log('Me quiero mover a la izquierda')
+  console.log('Me quiero mover hacia izquierda');
 
-    if((playerPosition.x - elementsSize) < elementsSize) {
-        console.log('OUT');
-    } else {
-        playerPosition.x -= elementsSize;
-        startGame();
-    }
+  if ((playerPosition.x - elementsSize) < elementsSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.x -= elementsSize;
+    startGame();
+  }
 }
 function moveRight() {
-    console.log('Me quiero mover a la derecha')
+  console.log('Me quiero mover hacia derecha');
 
-    if((playerPosition.x + elementsSize) > canvaSize) {
-        console.log('OUT');
-    } else {
-        playerPosition.x += elementsSize;
-        startGame();
-    }
+  if ((playerPosition.x + elementsSize) > canvasSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.x += elementsSize;
+    startGame();
+  }
 }
 function moveDown() {
-    console.log('Me quiero mover hacia abajo')
-
-    if((playerPosition.y + elementsSize) > canvaSize) {
-        console.log('OUT');
-    } else {
-        playerPosition.y += elementsSize;
-        startGame();
-    }
+  console.log('Me quiero mover hacia abajo');
+  
+  if ((playerPosition.y + elementsSize) > canvasSize) {
+    console.log('OUT');
+  } else {
+    playerPosition.y += elementsSize;
+    startGame();
+  }
 }
-
-// location.reload() para recargar la pagina
-// setTimeOut() para ejecutar codigo despues de un tiempo
