@@ -18,10 +18,6 @@ let timeStart;
 let timePlayer;
 let timeInterval;
 
-let ultima_x;
-let ultima_y;
-let canvasSize1;
-
 const playerPosition = {
   x: undefined,
   y: undefined,
@@ -46,14 +42,6 @@ function setCanvasSize() {
     canvasSize = window.innerHeight * 0.7;
   }
   
-  if(canvasSize == canvasSize1) {
-    playerPosition.x = ultima_x;
-    playerPosition.y = ultima_y;
-    }
-    else {
-        playerPosition.x = ultima_x*(canvasSize/canvasSize1);
-        playerPosition.y = ultima_y*(canvasSize/canvasSize1);
-    }
   canvasSize = Number(canvasSize.toFixed(0));
   
   canvas.setAttribute('width', canvasSize);
@@ -61,8 +49,8 @@ function setCanvasSize() {
   
   elementsSize = canvasSize / 10;
 
-  playerPosition.x = ultima_x;
-  playerPosition.y = ultima_y;
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
   startGame();
 }
 
@@ -125,21 +113,10 @@ function startGame() {
 }
 
 function movePlayer() {
-
-    ultima_x = playerPosition.x;
-    ultima_y = playerPosition.y;
-
   const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
   const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
   const giftCollision = giftCollisionX && giftCollisionY;
   
-  if(window.innerHeight > window.innerWidth) {
-    canvasSize1 = window.innerWidth * 0.7;
-    }
-    else {
-        canvasSize1 = window.innerHeight * 0.7;
-    }
-
   if (giftCollision) {
     levelWin();
   }
