@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
-    <title>Racer Game</title>
+    <title>Malware Infection</title>
 </head>
 <body>
-    <div class="game-container">
+    <div class="game-container display-none">
         <canvas id="game" width="" height=""></canvas>
 
         <div class="buttons">
@@ -31,14 +31,12 @@
         <p>¿Estas listo?</p>
         <button class="start-btn" onclick="startGame()">¡Infectar!</button>
     </div>
-    <div class="game-fail">
+    <div class="game-fail display-none">
         <h1>No pudise infectar el sistema operativo del usuario :C</h1>
         <button onclick="reload()">Volver a intentar</button>
     </div>
-    <div class="game-win">
+    <div class="game-win display-none">
         <h1>¡El usuario ha sido infectado exitosamente!</h1>
-        <h2>Este fue tu tiempo</h2>
-
     </div>
     <script src="./maps.js"></script>
     <script src="./game.js"></script>

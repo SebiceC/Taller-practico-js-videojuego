@@ -1,5 +1,9 @@
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
+const gameContainer = document.querySelector(".game-container");
+const lobby = document.querySelector(".lobby");
+const loser = document.querySelector(".game-fail");
+const win = document.querySelector(".game-win");
 const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
@@ -31,9 +35,9 @@ let enemyPositions = [];
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
-function fixNumber(n) {
-  return Number(n.toFixed(2));
-}
+// function fixNumber(n) {
+//   return Number(n.toFixed(2));
+// }
 
 function setCanvasSize() {
   if (window.innerHeight > window.innerWidth) {
@@ -42,12 +46,12 @@ function setCanvasSize() {
     canvasSize = window.innerHeight * 0.7;
   }
   
-  canvasSize = Number(canvasSize.toFixed(0));
+  canvasSize = canvasSize.toFixed(3);
   
   canvas.setAttribute('width', canvasSize);
   canvas.setAttribute('height', canvasSize);
   
-  elementsSize = canvasSize / 10;
+  elementsSize = canvasSize / 10.2;
 
   playerPosition.x = undefined;
   playerPosition.y = undefined;
@@ -55,10 +59,13 @@ function setCanvasSize() {
 }
 
 function startGame() {
-  console.log({ canvasSize, elementsSize });
-  // console.log(window.innerWidth, window.innerHeight);
 
-  game.font = elementsSize + 'px Verdana';
+  gameContainer.classList.remove("display-none");
+  lobby.classList.add("display-none");
+
+  console.log({ canvasSize, elementsSize });
+
+  game.font = elementsSize - 7 + 'px Verdana';
   game.textAlign = 'end';
 
   const map = maps[level];
@@ -113,8 +120,8 @@ function startGame() {
 }
 
 function movePlayer() {
-  const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
-  const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
+  const giftCollisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);
+  const giftCollisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
   const giftCollision = giftCollisionX && giftCollisionY;
   
   if (giftCollision) {
@@ -122,8 +129,8 @@ function movePlayer() {
   }
 
   const enemyCollision = enemyPositions.find(enemy => {
-    const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
-    const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
+    const enemyCollisionX = enemy.x.toFixed(0) == playerPosition.x.toFixed(0);
+    const enemyCollisionY = enemy.y.toFixed(0) == playerPosition.y.toFixed(0);
     return enemyCollisionX && enemyCollisionY;
   });
   
@@ -158,9 +165,11 @@ function levelFail() {
 function gameWin() {
   console.log('Â¡Terminaste el juego!');
   clearInterval(timeInterval);
+  win.classList.remove("display-none");
+  gameContainer.classList.add("display-none");
 
   const recordTime = localStorage.getItem('record_time');
-  const playerTime = Date.now() - timeStart;
+  const playerTime = (Date.now() - timeStart)/1000;
 
   if (recordTime) {
     if (recordTime >= playerTime) {
@@ -182,15 +191,15 @@ function showLives() {
   
   spanLives.innerHTML = "";
   heartsArray.forEach(heart => spanLives.append(heart));
-}
+};
 
 function showTime() {
-  spanTime.innerHTML = Date.now() - timeStart;
-}
+  spanTime.innerHTML = (Date.now() - timeStart)/1000 + "s";
+};
 
 function showRecord() {
   spanRecord.innerHTML = localStorage.getItem('record_time');
-}
+};
 
 window.addEventListener('keydown', moveByKeys);
 btnUp.addEventListener('click', moveUp);

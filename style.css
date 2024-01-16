@@ -43,7 +43,7 @@ button:not(:last-child) {
     margin-right: 10px;
 }
 
-.messages {
+.score {
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
