@@ -7,7 +7,13 @@
     <title>Malware Infection</title>
 </head>
 <body>
-    <div class="game-container display-none">
+    <div id="lobby">
+        <h1>Malware Infection!</h1>
+        <p>Eres un Malware que se ha colado en el sistema operativo de un usuario descuidado mientras navegaba por internet, tu deber es infectar la computadora esquivando los firewall y los escudos de seguridad.</p>
+        <p>¿Estas listo?</p>
+        <button id="startBtn" onclick="setGame()">¡Infectar!</button>
+    </div>
+    <div id="game-container" style="display: none;">
         <canvas id="game" width="" height=""></canvas>
 
         <div class="buttons">
@@ -17,7 +23,7 @@
             <button id="down">Abajo</button>
         </div>
 
-        <div class="messages">
+        <div class="score">
             <p>Vidas: <span id="lives"></span></p>
             <p>Tiempo ​⏳​: <span id="time"></span></p>
             <p>Record 🏆​: <span id="record"></span></p>
@@ -25,17 +31,11 @@
         </div>
         <!-- <p><button id="reset_button">Reiniciar Juego</button></p> -->
     </div>
-    <div class="lobby">
-        <h1>Malware Infection!</h1>
-        <p>Eres un Malware que se ha colado en el sistema operativo de un usuario descuidad mientras este navegaba por internet, tu deber es infectar la computadora esquivando los firewall y los escudos de seguridad.</p>
-        <p>¿Estas listo?</p>
-        <button class="start-btn" onclick="startGame()">¡Infectar!</button>
-    </div>
-    <div class="game-fail display-none">
+    <div id="game-fail" style="display: none;">
         <h1>No pudise infectar el sistema operativo del usuario :C</h1>
         <button onclick="reload()">Volver a intentar</button>
     </div>
-    <div class="game-win display-none">
+    <div id="game-win" style="display: none;">
         <h1>¡El usuario ha sido infectado exitosamente!</h1>
     </div>
     <script src="./maps.js"></script>

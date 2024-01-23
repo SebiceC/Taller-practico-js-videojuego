@@ -1,9 +1,10 @@
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
-const gameContainer = document.querySelector(".game-container");
-const lobby = document.querySelector(".lobby");
-const loser = document.querySelector(".game-fail");
-const win = document.querySelector(".game-win");
+const gameContainer = document.querySelector("#game-container");
+const lobby = document.querySelector("#lobby");
+const loser = document.querySelector("#game-fail");
+const win = document.querySelector("#game-win");
+// const btnStart = document.getElementById("startBtn");
 const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
@@ -57,12 +58,17 @@ function setCanvasSize() {
   playerPosition.y = undefined;
   startGame();
 }
-
+function setGame() {
+  var miBoton = document.getElementById('startBtn');
+  if (miBoton) {
+    lobby.style.display = 'none';
+    gameContainer.style.display = 'flex';
+  } else {
+      console.error('El elemento no fue encontrado');
+  }
+  startGame()
+}
 function startGame() {
-
-  gameContainer.classList.remove("display-none");
-  lobby.classList.add("display-none");
-
   console.log({ canvasSize, elementsSize });
 
   game.font = elementsSize - 7 + 'px Verdana';
