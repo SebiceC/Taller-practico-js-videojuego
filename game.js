@@ -4,7 +4,6 @@ const gameContainer = document.querySelector("#game-container");
 const lobby = document.querySelector("#lobby");
 const loser = document.querySelector("#game-fail");
 const win = document.querySelector("#game-win");
-// const btnStart = document.getElementById("startBtn");
 const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
@@ -36,9 +35,6 @@ let enemyPositions = [];
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
-// function fixNumber(n) {
-//   return Number(n.toFixed(2));
-// }
 
 function setCanvasSize() {
   if (window.innerHeight > window.innerWidth) {
@@ -59,13 +55,13 @@ function setCanvasSize() {
   startGame();
 }
 function setGame() {
-  var miBoton = document.getElementById('startBtn');
-  if (miBoton) {
+
+  const startBtn = document.getElementById('startBtn');
+  if (startBtn) {
     lobby.style.display = 'none';
     gameContainer.style.display = 'flex';
-  } else {
-      console.error('El elemento no fue encontrado');
-  }
+  } 
+
   startGame()
 }
 function startGame() {
@@ -156,20 +152,30 @@ function levelWin() {
 function levelFail() {
   console.log('Chocaste contra un enemigo :(');
   lives--;
-  
+
   if (lives <= 0) {
     level = 0;
     lives = 3;
     timeStart = undefined;
-  }
+    gameContainer.style.display = 'none';
+    gameFail.style.display = 'flex';
+  } 
 
   playerPosition.x = undefined;
   playerPosition.y = undefined;
   startGame();
 }
+function resetGame() {
+  const reloadBtn = document.getElementById('reloadBtn');
 
+  if (reloadBtn) {
+    lobby.style.display = 'block';
+    gameContainer.style.display = 'none';
+    gameFail.style.display = 'none';
+  }
+}
 function gameWin() {
-  console.log('Â¡Terminaste el juego!');
+  console.log('¡Terminaste el juego!');
   clearInterval(timeInterval);
   win.classList.remove("display-none");
   gameContainer.classList.add("display-none");
@@ -191,6 +197,8 @@ function gameWin() {
 
   console.log({recordTime, playerTime});
 }
+
+
 
 function showLives() {
   const heartsArray = Array(lives).fill(emojis['HEART']); // [1,2,3]

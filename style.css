@@ -27,6 +27,14 @@ body {
 #lobby h1 {
     margin-bottom: 3rem;
 }
+#gameFail {
+    margin: 3rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 3rem;
+}
 
 .startBtn {
     width: 300px;
