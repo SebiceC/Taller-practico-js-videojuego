@@ -27,7 +27,6 @@
             <p>Vidas: <span id="lives"></span></p>
             <p>Tiempo ​⏳​: <span id="time"></span></p>
             <p>Record 🏆​: <span id="record"></span></p>
-            <p id="result"></p>
         </div>
         <!-- <p><button id="reset_button">Reiniciar Juego</button></p> -->
     </div>
@@ -37,6 +36,8 @@
     </div>
     <div id="game-win" style="display: none;">
         <h1>¡El usuario ha sido infectado exitosamente!</h1>
+        <p id="result"></p>
+        <button id="winBtn" onclick="resetGame()">¡Reintentar!</button>
     </div>
     <script src="./maps.js"></script>
     <script src="./game.js"></script>

@@ -2,8 +2,8 @@ const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 const gameContainer = document.querySelector("#game-container");
 const lobby = document.querySelector("#lobby");
-const loser = document.querySelector("#game-fail");
-const win = document.querySelector("#game-win");
+const gameFail = document.querySelector("#gameFail");
+
 const btnUp = document.querySelector('#up');
 const btnLeft = document.querySelector('#left');
 const btnRight = document.querySelector('#right');
@@ -12,6 +12,8 @@ const spanLives = document.querySelector('#lives');
 const spanTime = document.querySelector('#time');
 const spanRecord = document.querySelector('#record');
 const pResult = document.querySelector('#result');
+const winnerGame = document.querySelector("#game-win");
+
 
 let canvasSize;
 let elementsSize;
@@ -55,12 +57,9 @@ function setCanvasSize() {
   startGame();
 }
 function setGame() {
-
-  const startBtn = document.getElementById('startBtn');
-  if (startBtn) {
-    lobby.style.display = 'none';
-    gameContainer.style.display = 'flex';
-  } 
+  lobby.style.display = 'none';
+  gameContainer.style.display = 'flex';
+  winnerGame.style.display = 'none';
 
   startGame()
 }
@@ -166,19 +165,15 @@ function levelFail() {
   startGame();
 }
 function resetGame() {
-  const reloadBtn = document.getElementById('reloadBtn');
-
-  if (reloadBtn) {
-    lobby.style.display = 'block';
-    gameContainer.style.display = 'none';
-    gameFail.style.display = 'none';
-  }
+  lobby.style.display = 'block';
+  gameContainer.style.display = 'none';
+  gameFail.style.display = 'none';
+  winnerGame.style.display = 'none';
 }
 function gameWin() {
   console.log('¡Terminaste el juego!');
   clearInterval(timeInterval);
-  win.classList.remove("display-none");
-  gameContainer.classList.add("display-none");
+ 
 
   const recordTime = localStorage.getItem('record_time');
   const playerTime = (Date.now() - timeStart)/1000;
@@ -196,10 +191,9 @@ function gameWin() {
   }
 
   console.log({recordTime, playerTime});
+  winnerGame.style.display = 'flex';
+  gameContainer.style.display = 'none';
 }
-
-
-
 function showLives() {
   const heartsArray = Array(lives).fill(emojis['HEART']); // [1,2,3]
   

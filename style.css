@@ -35,7 +35,17 @@ body {
     justify-items: center;
     gap: 3rem;
 }
-
+#game-win {
+    margin: 3rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    gap: 3rem;
+}
+#result {
+    text-align: center;
+}
 .startBtn {
     width: 300px;
     font-weight: bold;
