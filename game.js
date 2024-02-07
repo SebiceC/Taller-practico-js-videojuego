@@ -43,12 +43,12 @@ function setCanvasSize() {
     canvasSize = window.innerHeight * 0.7;
   }
   
-  canvasSize = canvasSize.toFixed(3);
+  canvasSize = canvasSize.toFixed(2);
   
   canvas.setAttribute('width', canvasSize);
   canvas.setAttribute('height', canvasSize);
   
-  elementsSize = canvasSize / 10.2;
+  elementsSize = canvasSize / 10;
 
   playerPosition.x = undefined;
   playerPosition.y = undefined;
@@ -122,8 +122,8 @@ function startGame() {
 }
 
 function movePlayer() {
-  const giftCollisionX = playerPosition.x.toFixed(0) == giftPosition.x.toFixed(0);
-  const giftCollisionY = playerPosition.y.toFixed(0) == giftPosition.y.toFixed(0);
+  const giftCollisionX = playerPosition.x.toFixed(3) == giftPosition.x.toFixed(3);
+  const giftCollisionY = playerPosition.y.toFixed(3) == giftPosition.y.toFixed(3);
   const giftCollision = giftCollisionX && giftCollisionY;
   
   if (giftCollision) {
@@ -131,8 +131,8 @@ function movePlayer() {
   }
 
   const enemyCollision = enemyPositions.find(enemy => {
-    const enemyCollisionX = enemy.x.toFixed(0) == playerPosition.x.toFixed(0);
-    const enemyCollisionY = enemy.y.toFixed(0) == playerPosition.y.toFixed(0);
+    const enemyCollisionX = enemy.x.toFixed(3) == playerPosition.x.toFixed(3);
+    const enemyCollisionY = enemy.y.toFixed(3) == playerPosition.y.toFixed(3);
     return enemyCollisionX && enemyCollisionY;
   });
   
@@ -140,7 +140,7 @@ function movePlayer() {
     levelFail();
   }
 
-  game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+  game.fillText(emojis['PLAYER'], playerPosition.x.toFixed(3), playerPosition.y.toFixed(3));
 }
 
 function levelWin() {
@@ -230,7 +230,7 @@ function moveByKeys(event) {
 function moveUp() {
   console.log('Me quiero mover hacia arriba');
 
-  if ((playerPosition.y - elementsSize) < elementsSize) {
+  if ((playerPosition.y.toFixed(3) - elementsSize) < elementsSize) {
     console.log('OUT');
   } else {
     playerPosition.y -= elementsSize;
@@ -240,7 +240,7 @@ function moveUp() {
 function moveLeft() {
   console.log('Me quiero mover hacia izquierda');
 
-  if ((playerPosition.x - elementsSize) < elementsSize) {
+  if ((playerPosition.x.toFixed(3) - elementsSize) < elementsSize) {
     console.log('OUT');
   } else {
     playerPosition.x -= elementsSize;
@@ -250,7 +250,7 @@ function moveLeft() {
 function moveRight() {
   console.log('Me quiero mover hacia derecha');
 
-  if ((playerPosition.x + elementsSize) > canvasSize) {
+  if ((playerPosition.x.toFixed(3) + elementsSize) > canvasSize) {
     console.log('OUT');
   } else {
     playerPosition.x += elementsSize;
@@ -260,7 +260,7 @@ function moveRight() {
 function moveDown() {
   console.log('Me quiero mover hacia abajo');
   
-  if ((playerPosition.y + elementsSize) > canvasSize) {
+  if ((playerPosition.y.toFixed(3) + elementsSize) > canvasSize) {
     console.log('OUT');
   } else {
     playerPosition.y += elementsSize;
